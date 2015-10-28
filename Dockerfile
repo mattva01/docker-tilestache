@@ -16,8 +16,8 @@ RUN curl -sSL "$MAPNIK_DOWNLOAD_URL" -o mapnik.tar.bz2 \
          && mkdir -p /usr/src/mapnik \
          && tar xvfj mapnik.tar.bz2 -C /usr/src/mapnik/ --strip-components=1 
          && rm mapnik.tar.bz2 \
-         && cd /usr/src/mapnik/ 
-         && ./configure
+         && cd /usr/src/mapnik/ \ 
+         && ./configure \ 
          && make \
          && make install \
          && rm -r /usr/src/mapnik
