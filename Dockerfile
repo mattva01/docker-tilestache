@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 RUN curl -sSL "$MAPNIK_DOWNLOAD_URL" -o mapnik.tar.bz2 \
          && mkdir -p /usr/src/mapnik \
-         && tar xvfj mapnik.tar.bz2 -C /usr/src/mapnik/ --strip-components=1 
+         && tar xfj mapnik.tar.bz2 -C /usr/src/mapnik/ --strip-components=1 \ 
          && rm mapnik.tar.bz2 \
          && cd /usr/src/mapnik/ \ 
          && ./configure \ 
