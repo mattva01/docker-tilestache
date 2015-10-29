@@ -14,7 +14,7 @@ RUN pip install  -r requirements.txt
 
 EXPOSE 8080
 ONBUILD COPY requirements.txt /usr/src/app/
-ONBUILD RUN pip install --no-cache-dir -r requirements.txt
+ONBUILD RUN pip install -r requirements.txt
 
 ONBUILD COPY . /usr/src/app
 
