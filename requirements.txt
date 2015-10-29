@@ -1,2 +1,3 @@
-TileStache ~= 1.50
-
+Pillow == 2.8.1
+TileStache >= 1.50
+gunicorn

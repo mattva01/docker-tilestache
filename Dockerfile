@@ -1,23 +1,24 @@
-FROM python:2.7-onbuild
-ENV MAPNIK_DOWNLOAD_URL http://mapnik.s3.amazonaws.com/dist/v2.2.0/mapnik-v2.2.0.tar.bz2
+FROM ubuntu:precise
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
-# Install mapnik dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-          libproj-dev \
-          #gdal-bin \
-          libboost-dev \
-          libboost-system-dev \
-          libboost-regex-dev \
-          libboost-filesystem-dev \
-          libboost-thread-dev \
-          libicu-dev \
-    && rm -rf /var/lib/apt/lists/*
-RUN curl -sSL "$MAPNIK_DOWNLOAD_URL" -o mapnik.tar.bz2 \
-         && mkdir -p /usr/src/mapnik \
-         && tar xfj mapnik.tar.bz2 -C /usr/src/mapnik/ --strip-components=1 \ 
-         && rm mapnik.tar.bz2 \
-         && cd /usr/src/mapnik/ \ 
-         && ./configure \ 
-         && make \
-         && make install \
-         && rm -r /usr/src/mapnik
+RUN apt-get update \
+  && apt-get install -y -q python-software-properties python-pip libzmq-dev \
+  && add-apt-repository -y ppa:mapnik/v2.2.0 \ 
+  && apt-get update \
+  && apt-get install -y -q libmapnik libmapnik-dev mapnik-utils python-mapnik \
+  && apt-get install -y -q libjpeg-dev zlib1g-dev \
+  && rm -rf /var/lib/apt/lists/*
+COPY requirements.txt /usr/src/app/
+RUN pip install  -r requirements.txt
+
+EXPOSE 8080
+ONBUILD COPY requirements.txt /usr/src/app/
+ONBUILD RUN pip install --no-cache-dir -r requirements.txt
+
+ONBUILD COPY . /usr/src/app
+
+CMD gunicorn -b 0.0.0.0:8080  "TileStache:WSGITileServer('tilestache.cfg')"
+
+
+
